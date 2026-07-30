@@ -166,13 +166,15 @@
            |    COUNT:1 ─────┐
            +--------------------+   │
                                     v
-                         +------------------+
-                         |  EJECT_SINGLE    |
-                         | 剩余高板(还在200mm)|
-                         | 从Z7→Z0依次降至0  |
-                         | 每步间隔 500ms    |
-                         | NOTIFY:EJECT_DONE |
-                         +------------------+
+                         +-------------------------------+
+                         |  EJECT_SINGLE (斜坡排出)       |
+                         | 剩余高板保持 +200mm (左侧高)   |
+                         | 从 Z7 开始向左逐板降至 0       |
+                         | → 形成动态滚动斜坡             |
+                         | → 芦笋随坡自然滚向出料端        |
+                         | 每步间隔 500ms                 |
+                         | NOTIFY:EJECT_DONE              |
+                         +-------------------------------+
                                   |
                                   └──→ 自动触发 INFEED (回上方循环)
 ```
@@ -184,7 +186,7 @@
 | `HOMING` | 上电初始化 | 8轴降到 HOME 限位 → 升至 +50mm | `NOTIFY:HOMED` |
 | `INFEED` | COUNT:0 或 EJECT完成 | 全降至0（重力进料）→ 同步升至 +50mm | `NOTIFY:READY` |
 | `DE_STACKING` | COUNT:MANY | 全升至 +200mm → 从Z0起逐板降至0，每降一板等Vision反馈，循环 | `NOTIFY:STEP_DONE`（每板） |
-| `EJECT_SINGLE` | COUNT:1 | 剩余高板从Z7→Z0依次降至0，间隔500ms | `NOTIFY:EJECT_DONE` |
+| `EJECT_SINGLE` | COUNT:1 | 剩余高板（+200mm）保持左侧高，从Z7向左每500ms降一块板至0，形成动态滚动斜坡，芦笋自然滚出 | `NOTIFY:EJECT_DONE` |
 
 ---
 
